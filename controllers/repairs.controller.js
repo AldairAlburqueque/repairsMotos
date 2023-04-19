@@ -1,4 +1,5 @@
 const Repairs = require('../models/repairs.model');
+const catchAsync = require('../utils/catchAsync');
 
 exports.findAllRepairs = async (req, res) => {
   const repairs = await Repairs.findAll({
@@ -37,9 +38,9 @@ exports.createRepairs = async (req, res) => {
   });
 };
 
-exports.updateRepairs = async (req, res) => {
-  const { repairs } = req;
+exports.updateRepairs = catchAsync(async (req, res) => {
   const { status } = req.body;
+  const { repairs } = req;
 
   await repairs.update({ status: 'completed' });
 
@@ -48,15 +49,15 @@ exports.updateRepairs = async (req, res) => {
     message: 'Your repair has been completed successfully',
     repairs,
   });
-};
+});
 
-exports.deleteRepairs = async (req, res) => {
+exports.deleteRepairs = catchAsync(async (req, res) => {
   const { repairs } = req;
 
   await repairs.update({ status: 'cancelled' });
 
   res.status(200).json({
-    status: 'succes',
+    status: 'success',
     message: 'The repair has been canceled',
   });
-};
+});
