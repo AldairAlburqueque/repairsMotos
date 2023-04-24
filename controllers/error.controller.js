@@ -7,7 +7,7 @@ const handleJWTExpiredError = () =>
   new AppError('Your token has expired! Please Login again.', 401);
 
 const handleJWTError = () =>
-  new AppError('Invalid token. Please login again', 401);
+  new AppError('Invalid Token. Please login again!.', 401);
 
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
@@ -25,7 +25,7 @@ const sendErrorProd = (err, res) => {
       message: err.message,
     });
   } else {
-    console.error('Error 🧨', err);
+    console.error('Error', err);
     res.status(500).json({
       status: 'fail',
       message: 'Something went very wrong!',
@@ -43,9 +43,8 @@ const globalErrorHandler = (err, req, res, next) => {
 
   if (process.env.NODE_ENV === 'production') {
     let error = err;
-    console.log(error.parent?.code);
 
-    if (error.parent?.code === '22P02') error = handleCastError22P02(error);
+    if (error.parent?.code === '22P02') error = handleCastError22P02();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
 

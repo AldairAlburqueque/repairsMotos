@@ -1,35 +1,35 @@
 const express = require('express');
 
 const repairsController = require('./../controllers/repairs.controller');
+
 const repairsMiddleware = require('./../middlewares/repairs.middleware');
+const userMiddleware = require('../middlewares/users.middleware');
 
-const authMiddleware = require('../middlewares/auth.middleware');
+const router = express.Router();
 
-const rout = express.Router();
+router.use(userMiddleware.protect);
 
-rout.use(authMiddleware.protect);
-
-rout
+router
   .route('/')
-  .get(authMiddleware.restictTo('employee'), repairsController.findAllRepairs)
+  .get(userMiddleware.restictTo('employee'), repairsController.findAllRepairs)
   .post(repairsController.createRepairs);
 
-rout
+router
   .route('/:id')
   .get(
     repairsMiddleware.validRepairs,
-    authMiddleware.restictTo('employee'),
+    userMiddleware.restictTo('employee'),
     repairsController.findOneRepairs
   )
   .patch(
     repairsMiddleware.validRepairs,
-    authMiddleware.restictTo('employee'),
+    userMiddleware.restictTo('employee'),
     repairsController.updateRepairs
   )
   .delete(
     repairsMiddleware.validRepairs,
-    authMiddleware.restictTo('employee'),
+    userMiddleware.restictTo('employee'),
     repairsController.deleteRepairs
   );
 
-module.exports = rout;
+module.exports = router;

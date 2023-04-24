@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const generateJWT = require('../utils/jwt');
 const AppError = require('../utils/appError');
 
-exports.findAllUser = catchAsync(async (req, res) => {
+exports.findAllUser = catchAsync(async (req, res, next) => {
   const users = await User.findAll({
     where: {
       status: 'available',
@@ -80,7 +80,7 @@ exports.login = catchAsync(async (req, res, next) => {
     token,
     user: {
       id: user.id,
-      name: user.ame,
+      name: user.name,
       email: user.email,
       role: user.role,
     },
